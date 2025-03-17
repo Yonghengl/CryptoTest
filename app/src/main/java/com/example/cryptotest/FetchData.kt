@@ -2,6 +2,7 @@ package com.example.cryptotest
 
 import android.content.Context
 import com.example.cryptotest.model.Models
+import com.example.cryptotest.model.reponse.CurrenciesResponse
 import com.example.cryptotest.model.reponse.LiveRatesResponse
 import com.example.cryptotest.model.reponse.WalletBalanceResponse
 import com.google.gson.Gson
@@ -30,6 +31,16 @@ class FetchData(private val context: Context) {
         }
         val liveRatesResponse: LiveRatesResponse =
             Gson().fromJson(jsonString, LiveRatesResponse::class.java)
+        emit(liveRatesResponse)
+    }
+
+    fun fetchTokenDetails(): Flow<CurrenciesResponse> = flow {
+        val jsonString = withContext(Dispatchers.IO) {
+            Thread.sleep(2000);
+            loadJSONFromAsset("currencies.json")
+        }
+        val liveRatesResponse: CurrenciesResponse =
+            Gson().fromJson(jsonString, CurrenciesResponse::class.java)
         emit(liveRatesResponse)
     }
 

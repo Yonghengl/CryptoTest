@@ -25,7 +25,10 @@ class MainActivity : FragmentActivity() {
             .add(R.id.main_frame, WalletFrragment(), "wallet")
             .commitNow();
 
-        lifecycleScope.launch { ExchangeRateManager.instance.loadExchangeRate(this@MainActivity); }
+        lifecycleScope.launch {
+            ExchangeRateManager.instance.loadExchangeRate(this@MainActivity);
+            TokenDataManager.instance.loadTokenDetails(this@MainActivity);
+        }
 
     }
 }

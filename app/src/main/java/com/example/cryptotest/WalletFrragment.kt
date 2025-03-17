@@ -35,13 +35,20 @@ class WalletFrragment : Fragment() {
         lifecycleScope.launch {
             walletViewModel.walletItems.collect { walletItems ->
                 Log.e(TAG, "setadapter   size = " + walletItems.size)
-                val adapter = MainAdapter(walletItems) { item ->
-                    handleItemClick(item)
+                val adapter = activity?.let {
+                    MainAdapter(walletItems, it) { item ->
+                        handleItemClick(item)
+                    }
                 }
                 mBinding.recyclerView.adapter = adapter
             }
         }
         ExchangeRateManager.instance.exchangeRate.observeForever() {
+            if (mBinding.recyclerView.adapter?.itemCount != 0) {
+                mBinding.recyclerView.adapter?.notifyDataSetChanged()
+            }
+        }
+        TokenDataManager.instance.tokenDetails.observeForever() {
             if (mBinding.recyclerView.adapter?.itemCount != 0) {
                 mBinding.recyclerView.adapter?.notifyDataSetChanged()
             }
