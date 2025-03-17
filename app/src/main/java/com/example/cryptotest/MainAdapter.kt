@@ -1,5 +1,6 @@
 package com.example.cryptotest
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,24 +25,41 @@ class MainAdapter(
         private val tvCurrency: TextView = view.findViewById(R.id.currency)
         private val icon: AppCompatImageView = view.findViewById(R.id.icon)
 
+        @SuppressLint("SetTextI18n")
         fun bind(item: Models.WalletBalance) {
-            tvToken.text = item.currency
-            tvAmount.text = item.amount.toString()
-            tvCurrency.text =
-                ExchangeRateManager.instance.getTokenCurrency(item.currency, item.amount)
+
+
             val token: Models.Token? = TokenDataManager.instance.getToken(item.currency);
             if (null != token) {
                 Log.i(TAG, "icon url = " + token.colorful_image_url)
                 Glide.with(context).load(token.colorful_image_url)
                     .placeholder(R.drawable.icon_wallet)
                     .into(icon)
+                tvToken.text = token.name
+                tvAmount.text = StringBuffer().append(item.amount.toString())
+                    .append(" ").append(item.currency)
+
+            } else {
+                tvToken.text = item.currency
+                tvAmount.text = item.amount.toString()
             }
+
+            tvCurrency.text = StringBuffer().append(
+                CurrencyManager.instance.getCurrentCurrency()
+                    .symbol()
+            ).append(" ").append(
+                ExchangeRateManager.instance.getTokenCurrency(
+                    item.currency,
+                    item.amount
+                )
+            ).toString();
             itemView.setOnClickListener { onItemClick(item) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.adapter_item, parent, false)
         return WalletViewHolder(view)
     }
 

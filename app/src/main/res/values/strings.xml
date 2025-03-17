@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CryptoTest</string>
+    <string name="crypto">crypto.com</string>
+    <string name="defi_wallet">DEFI WALLET</string>
+    <string name="wallet">Wallet</string>
+    <string name="defi">DeFi</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
 </resources>

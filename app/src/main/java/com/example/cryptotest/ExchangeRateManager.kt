@@ -48,7 +48,7 @@ class ExchangeRateManager {
         return getTokenRate(
             symbol,
             amount,
-            CurrencyManager().getCurrentCurrency().name
+            CurrencyManager.instance.getCurrentCurrency().name
         )
     }
 

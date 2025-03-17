@@ -7,6 +7,22 @@ class CurrencyManager {
         AUD("AUD"),
         CAD("CAD"),
         GBP("GBP");
+
+        fun symbol(): String {
+            return when (this) {
+                ERD -> "₺"
+                USD -> "$"
+                AUD -> "AUD$"
+                CAD -> "CA$"
+                GBP -> "£"
+            }
+        }
+    }
+
+    companion object {
+        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            CurrencyManager()
+        }
     }
 
     private var currentCurrency: Currency = Currency.USD
@@ -20,4 +36,5 @@ class CurrencyManager {
     fun setCurrentCurrency(currency: Currency) {
         currentCurrency = currency
     }
+
 }
