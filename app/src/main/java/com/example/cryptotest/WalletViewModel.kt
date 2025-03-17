@@ -1,6 +1,7 @@
 package com.example.cryptotest
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cryptotest.model.Models
@@ -22,7 +23,8 @@ class WalletViewModel() : ViewModel() {
 
     fun loadWalletData(context: Context) {
         viewModelScope.launch {
-            FetchData().fetchWalletData(context).collect { items ->
+            FetchData(context).fetchWalletData().collect { items ->
+                Log.i(TAG, "balance down");
                 if (items.ok) {
                     _walletItems.value = items.wallet;
                 }

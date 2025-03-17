@@ -14,12 +14,14 @@ class MainAdapter(
     RecyclerView.Adapter<MainAdapter.WalletViewHolder>() {
 
     inner class WalletViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val currencyTextView: TextView = view.findViewById(R.id.token)
-        private val amountTextView: TextView = view.findViewById(R.id.amount)
+        private val tvToken: TextView = view.findViewById(R.id.token)
+        private val tvAmount: TextView = view.findViewById(R.id.amount)
+        private val tvCurrency: TextView = view.findViewById(R.id.currency)
 
         fun bind(item: Models.WalletBalance) {
-            currencyTextView.text = item.currency
-            amountTextView.text = item.amount.toString()
+            tvToken.text = item.currency
+            tvAmount.text = item.amount.toString()
+            tvCurrency.text = ExchangeRateManager.instance.getTokenCurrency(item.currency, item.amount)
             itemView.setOnClickListener { onItemClick(item) }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.cryptotest
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,15 +28,22 @@ class WalletFrragment : Fragment() {
         return mBinding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData() {
         activity?.let { walletViewModel.loadWalletData(it) }
         mBinding.recyclerView.layoutManager = LinearLayoutManager(activity);
         lifecycleScope.launch {
             walletViewModel.walletItems.collect { walletItems ->
+                Log.e(TAG, "setadapter   size = " + walletItems.size)
                 val adapter = MainAdapter(walletItems) { item ->
                     handleItemClick(item)
                 }
                 mBinding.recyclerView.adapter = adapter
+            }
+        }
+        ExchangeRateManager.instance.exchangeRate.observeForever() {
+            if (mBinding.recyclerView.adapter?.itemCount != 0) {
+                mBinding.recyclerView.adapter?.notifyDataSetChanged()
             }
         }
     }
@@ -44,3 +52,5 @@ class WalletFrragment : Fragment() {
         Log.i(TAG, "Clicked: ${item.currency} - ${item.amount}")
     }
 }
+
+
