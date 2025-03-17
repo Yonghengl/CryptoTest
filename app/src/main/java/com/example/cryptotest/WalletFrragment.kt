@@ -43,9 +43,16 @@ class WalletFrragment : Fragment() {
                 mBinding.recyclerView.adapter = adapter
             }
         }
+        walletViewModel.totalBalance.observeForever() {
+            Log.i(TAG, " total balance change")
+            mBinding.tvMoney.text = CurrencyManager.instance.getCurrentCurrency().symbol()
+            mBinding.tvBalance.text = walletViewModel.totalBalance.value
+            mBinding.tvCurrency.text = CurrencyManager.instance.getCurrentCurrency().name
+        }
         ExchangeRateManager.instance.exchangeRate.observeForever() {
             if (mBinding.recyclerView.adapter?.itemCount != 0) {
                 mBinding.recyclerView.adapter?.notifyDataSetChanged()
+                walletViewModel.calculateTotal()
             }
         }
         TokenDataManager.instance.tokenDetails.observeForever() {

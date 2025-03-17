@@ -34,15 +34,18 @@ class ExchangeRateManager {
         }
     }
 
-    fun getTokenCurrency(symbol: String, amount: Double): String {
-        Log.i(TAG, "getToken currency  size = " + _exchangeRate.value?.size)
+    fun getTokenCurrency(symbol: String, amount: Double, format: Boolean = true): String {
         val tokenRate = getTokenRate(
             symbol,
             amount,
             CurrencyManager().getCurrentCurrency().name
         )
+        if (!format) {
+            return NumberUtils.multiply(amount.toString(), tokenRate)
+        }
         return DataFormat.formatAmount(NumberUtils.multiply(amount.toString(), tokenRate));
     }
+
 
     fun getTokenRate(symbol: String, amount: Double): String {
         return getTokenRate(
