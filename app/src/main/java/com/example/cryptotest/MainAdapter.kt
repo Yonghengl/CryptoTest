@@ -31,7 +31,6 @@ class MainAdapter(
 
             val token: Models.Token? = TokenDataManager.instance.getToken(item.currency);
             if (null != token) {
-                Log.i(TAG, "icon url = " + token.colorful_image_url)
                 Glide.with(context).load(token.colorful_image_url)
                     .placeholder(R.drawable.icon_wallet)
                     .into(icon)

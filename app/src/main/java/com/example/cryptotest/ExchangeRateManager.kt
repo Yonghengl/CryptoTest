@@ -23,8 +23,8 @@ class ExchangeRateManager {
         }
     }
 
-    private val _exchangeRate = MutableLiveData<List<Models.CurrencyExchange>>(emptyList())
-    val exchangeRate: LiveData<List<Models.CurrencyExchange>> get() = _exchangeRate;
+    private val _exchangeRate = MutableStateFlow<List<Models.CurrencyExchange>>(emptyList())
+    val exchangeRate: StateFlow<List<Models.CurrencyExchange>> get() = _exchangeRate;
     suspend fun loadExchangeRate(context: Context) {
         FetchData(context).fetchExchangeRate().collect { items ->
             Log.i(TAG, "rate down");
@@ -38,7 +38,7 @@ class ExchangeRateManager {
         val tokenRate = getTokenRate(
             symbol,
             amount,
-            CurrencyManager().getCurrentCurrency().name
+            CurrencyManager.instance.getCurrentCurrency().name
         )
         if (!format) {
             return NumberUtils.multiply(amount.toString(), tokenRate)

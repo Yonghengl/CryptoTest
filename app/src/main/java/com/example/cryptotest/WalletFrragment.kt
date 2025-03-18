@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cryptotest.databinding.FragmentWalletBinding
 import com.example.cryptotest.model.Models
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
 class WalletFrragment : Fragment() {
@@ -33,31 +35,55 @@ class WalletFrragment : Fragment() {
         activity?.let { walletViewModel.loadWalletData(it) }
         mBinding.recyclerView.layoutManager = LinearLayoutManager(activity);
         lifecycleScope.launch {
-            walletViewModel.walletItems.collect { walletItems ->
-                Log.e(TAG, "setadapter   size = " + walletItems.size)
-                val adapter = activity?.let {
-                    MainAdapter(walletItems, it) { item ->
-                        handleItemClick(item)
+            launch {
+                walletViewModel.walletItems.collect { walletItems ->
+                    Log.e(TAG, "setadapter   size = " + walletItems.size)
+                    val adapter = activity?.let {
+                        MainAdapter(walletItems, it) { item ->
+                            handleItemClick(item)
+                        }
+                    }
+                    mBinding.recyclerView.adapter = adapter
+                }
+            }
+            launch {
+                walletViewModel.totalBalance.collect { totalBalance ->
+                    Log.i(TAG, " total balance change")
+                    mBinding.tvMoney.text = CurrencyManager.instance.getCurrentCurrency().symbol()
+                    mBinding.tvBalance.text = DataFormat.formatAmount(totalBalance, 0, 2)
+                    mBinding.tvCurrency.text = CurrencyManager.instance.getCurrentCurrency().name
+                }
+            }
+            launch {
+                ExchangeRateManager.instance.exchangeRate.collect {
+                    if (mBinding.recyclerView.adapter?.itemCount != 0) {
+                        mBinding.recyclerView.adapter?.notifyDataSetChanged()
+                        walletViewModel.calculateTotal()
                     }
                 }
-                mBinding.recyclerView.adapter = adapter
+            }
+            launch {
+                TokenDataManager.instance.tokenDetails.collect() {
+                    if (mBinding.recyclerView.adapter?.itemCount != 0) {
+                        mBinding.recyclerView.adapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+            launch {
+                CurrencyManager.instance.currentCurrency.collect() {
+                    if (mBinding.recyclerView.adapter?.itemCount != 0) {
+                        mBinding.recyclerView.adapter?.notifyDataSetChanged()
+                        walletViewModel.calculateTotal()
+                    }
+                }
             }
         }
-        walletViewModel.totalBalance.observeForever() {
-            Log.i(TAG, " total balance change")
-            mBinding.tvMoney.text = CurrencyManager.instance.getCurrentCurrency().symbol()
-            mBinding.tvBalance.text = walletViewModel.totalBalance.value
-            mBinding.tvCurrency.text = CurrencyManager.instance.getCurrentCurrency().name
-        }
-        ExchangeRateManager.instance.exchangeRate.observeForever() {
-            if (mBinding.recyclerView.adapter?.itemCount != 0) {
-                mBinding.recyclerView.adapter?.notifyDataSetChanged()
-                walletViewModel.calculateTotal()
-            }
-        }
-        TokenDataManager.instance.tokenDetails.observeForever() {
-            if (mBinding.recyclerView.adapter?.itemCount != 0) {
-                mBinding.recyclerView.adapter?.notifyDataSetChanged()
+
+        mBinding.iconSetting.setOnClickListener {
+            if (CurrencyManager.instance.getCurrentCurrency() == CurrencyManager.Currency.USD) {
+                CurrencyManager.instance.setCurrentCurrency(CurrencyManager.Currency.AUD)
+            } else {
+                CurrencyManager.instance.setCurrentCurrency(CurrencyManager.Currency.USD)
             }
         }
     }

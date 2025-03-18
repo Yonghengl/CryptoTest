@@ -23,8 +23,8 @@ class TokenDataManager {
         }
     }
 
-    private val _tokenDetails = MutableLiveData<List<Models.Token>>(emptyList())
-    val tokenDetails: LiveData<List<Models.Token>> get() = _tokenDetails;
+    private val _tokenDetails = MutableStateFlow<List<Models.Token>>(emptyList())
+    val tokenDetails: StateFlow<List<Models.Token>> get() = _tokenDetails;
     suspend fun loadTokenDetails(context: Context) {
         FetchData(context).fetchTokenDetails().collect { items ->
             Log.i(TAG, "token data down");

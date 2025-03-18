@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.cryptotest.databinding.ActivityMainBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,6 @@ class MainActivity : FragmentActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.main_frame, WalletFrragment(), "wallet")
             .commitNow();
-
         lifecycleScope.launch {
             ExchangeRateManager.instance.loadExchangeRate(this@MainActivity);
             TokenDataManager.instance.loadTokenDetails(this@MainActivity);

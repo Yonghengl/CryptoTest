@@ -23,11 +23,9 @@ class WalletViewModel() : ViewModel() {
 
     private val _walletItems = MutableStateFlow<List<Models.WalletBalance>>(emptyList())
     val walletItems: StateFlow<List<Models.WalletBalance>> get() = _walletItems
-    private val _balance = MutableLiveData<String>("0")
+    private val _balance = MutableStateFlow<String>("0")
 
-    val totalBalance: LiveData<String> = Transformations.map(_balance) {
-        _balance.value?.let { DataFormat.formatAmount(it, 0, 2) }
-    }
+    val totalBalance: StateFlow<String> get() = _balance
 
     fun loadWalletData(context: Context) {
         viewModelScope.launch {
