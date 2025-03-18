@@ -30,6 +30,8 @@ class ExchangeRateManager {
             Log.i(TAG, "rate down");
             if (items.ok) {
                 _exchangeRate.value = items.tiers
+            } else {
+                Log.e(TAG, "loadExchangeRate error , " + items.warning)
             }
         }
     }
@@ -47,15 +49,7 @@ class ExchangeRateManager {
     }
 
 
-    fun getTokenRate(symbol: String, amount: Double): String {
-        return getTokenRate(
-            symbol,
-            amount,
-            CurrencyManager.instance.getCurrentCurrency().name
-        )
-    }
-
-    fun getTokenRate(symbol: String, amount: Double, currencyTo: String): String {
+    private fun getTokenRate(symbol: String, amount: Double, currencyTo: String): String {
         var rate: String = "0";
         if (_exchangeRate.value?.size!! > 0) {
             _exchangeRate.value?.forEach { data ->

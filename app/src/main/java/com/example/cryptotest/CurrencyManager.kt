@@ -1,16 +1,15 @@
 package com.example.cryptotest
 
-import com.example.cryptotest.model.Models
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class CurrencyManager {
-    enum class Currency(val description: String) {
-        ERD("ERD"),
-        USD("USD"),
-        AUD("AUD"),
-        CAD("CAD"),
-        GBP("GBP");
+    enum class Currency {
+        ERD,
+        USD,
+        AUD,
+        CAD,
+        GBP;
 
         fun symbol(): String {
             return when (this) {
@@ -29,7 +28,7 @@ class CurrencyManager {
         }
     }
 
-    private val _currentCurrency = MutableStateFlow<Currency>(Currency.USD)
+    private val _currentCurrency = MutableStateFlow(Currency.USD)
     val currentCurrency: StateFlow<Currency> get() = _currentCurrency;
 
     // 获取当前货币

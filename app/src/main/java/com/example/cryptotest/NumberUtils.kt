@@ -14,16 +14,6 @@ object NumberUtils {
         }
     }
 
-    fun subtract(v1: String?, v2: String?): String {
-        return try {
-            val b1 = BigDecimal(v1)
-            val b2 = BigDecimal(v2)
-            b1.subtract(b2).toPlainString().replace(",", ".")
-        } catch (e: Exception) {
-            "0"
-        }
-    }
-
     fun multiply(v1: String?, v2: String?): String {
         return try {
             val b1 = BigDecimal(v1)

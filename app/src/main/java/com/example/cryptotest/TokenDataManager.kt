@@ -30,6 +30,8 @@ class TokenDataManager {
             Log.i(TAG, "token data down");
             if (items.ok) {
                 _tokenDetails.value = items.currencies
+            } else {
+                Log.e(TAG, "loadTokenDetails error , " + items.warning)
             }
         }
     }

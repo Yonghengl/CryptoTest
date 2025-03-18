@@ -33,6 +33,8 @@ class WalletViewModel() : ViewModel() {
                 Log.i(TAG, "balance down");
                 if (items.ok) {
                     _walletItems.value = items.wallet;
+                } else {
+                    Log.e(TAG, "loadWalletData error , " + items.warning)
                 }
             }
         }

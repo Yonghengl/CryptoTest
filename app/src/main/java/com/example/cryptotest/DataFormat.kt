@@ -21,7 +21,7 @@ object DataFormat {
         return formatAmount(amount, min, max, groupSize, RoundingMode.HALF_EVEN)
     }
 
-    private fun formatAmount(
+    fun formatAmount(
         amount: String,
         min: Int,
         max: Int,
@@ -32,14 +32,14 @@ object DataFormat {
         try {
             val maxNum = max.coerceAtLeast(min)
             amountDecimal = BigDecimal(amount)
-            val formate = NumberFormat.getInstance(Locale.ENGLISH) as DecimalFormat
-            formate.maximumFractionDigits = maxNum
-            formate.minimumFractionDigits = min
-            formate.groupingSize = groupSize
+            val format = NumberFormat.getInstance(Locale.ENGLISH) as DecimalFormat
+            format.maximumFractionDigits = maxNum
+            format.minimumFractionDigits = min
+            format.groupingSize = groupSize
             if (mode != null) {
-                formate.roundingMode = mode
+                format.roundingMode = mode
             }
-            return formate.format(amountDecimal)
+            return format.format(amountDecimal)
         } catch (_: Exception) {
         }
         return amount
