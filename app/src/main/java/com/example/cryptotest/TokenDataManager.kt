@@ -24,6 +24,7 @@ class TokenDataManager {
     }
 
     private val _tokenDetails = MutableStateFlow<List<Models.Token>>(emptyList())
+    // can use room to cache tokenDetails
     val tokenDetails: StateFlow<List<Models.Token>> get() = _tokenDetails;
     suspend fun loadTokenDetails(context: Context) {
         FetchData(context).fetchTokenDetails().collect { items ->

@@ -12,12 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cryptotest.databinding.FragmentWalletBinding
 import com.example.cryptotest.model.Models
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class WalletFragment : Fragment() {
     private lateinit var mBinding: FragmentWalletBinding
     private val walletViewModel: WalletViewModel = WalletViewModel()
 
+    private var mAdapter: MainAdapter? = null;
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,16 +34,35 @@ class WalletFragment : Fragment() {
     fun setData() {
         activity?.let { walletViewModel.loadWalletData(it) }
         mBinding.recyclerView.layoutManager = LinearLayoutManager(activity);
+        val combinedFlow =
+            combine(
+                walletViewModel.walletItems,
+                ExchangeRateManager.instance.exchangeRate,
+                TokenDataManager.instance.tokenDetails
+            )
+            { walletItems, exchangeRates, tokenDetails ->
+                Triple(walletItems, exchangeRates, tokenDetails)
+            }
         lifecycleScope.launch {
             launch {
-                walletViewModel.walletItems.collect { walletItems ->
-                    Log.e(TAG, "setadapter   size = " + walletItems.size)
-                    val adapter = activity?.let {
-                        MainAdapter(walletItems, it) { item ->
-                            handleItemClick(item)
+                combinedFlow.collect { (walletItems, exchangeRates, tokenDetails) ->
+                    Log.e(
+                        TAG, " combine back " + walletItems.size + " -- " + exchangeRates.size
+                    )
+                    if (walletItems.isNotEmpty()) {
+                        if (mAdapter == null) {
+                            mAdapter = activity?.let {
+                                MainAdapter(walletItems, it) { item ->
+                                    handleItemClick(item)
+                                }
+                            }
+                            mBinding.recyclerView.adapter = mAdapter
+                        } else {
+                            mAdapter?.setItems(walletItems)
+                            mAdapter?.notifyDataSetChanged()
                         }
                     }
-                    mBinding.recyclerView.adapter = adapter
+                    walletViewModel.calculateTotal()
                 }
             }
             launch {
@@ -50,21 +71,6 @@ class WalletFragment : Fragment() {
                     mBinding.tvMoney.text = CurrencyManager.instance.getCurrentCurrency().symbol()
                     mBinding.tvBalance.text = DataFormat.formatAmount(totalBalance, 0, 2)
                     mBinding.tvCurrency.text = CurrencyManager.instance.getCurrentCurrency().name
-                }
-            }
-            launch {
-                ExchangeRateManager.instance.exchangeRate.collect {
-                    if (mBinding.recyclerView.adapter?.itemCount != 0) {
-                        mBinding.recyclerView.adapter?.notifyDataSetChanged()
-                        walletViewModel.calculateTotal()
-                    }
-                }
-            }
-            launch {
-                TokenDataManager.instance.tokenDetails.collect() {
-                    if (mBinding.recyclerView.adapter?.itemCount != 0) {
-                        mBinding.recyclerView.adapter?.notifyDataSetChanged()
-                    }
                 }
             }
             launch {
@@ -85,6 +91,7 @@ class WalletFragment : Fragment() {
             }
         }
     }
+
 
     fun handleItemClick(item: Models.WalletBalance) {
         Log.i(TAG, "Clicked: ${item.currency} - ${item.amount}")

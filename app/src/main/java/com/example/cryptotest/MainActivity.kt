@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cryptotest.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
-const val TAG = "CryptoTest"
+const val TAG = "CryptoTest2"
 
 class MainActivity : FragmentActivity() {
     private lateinit var mBinding: ActivityMainBinding
@@ -20,6 +20,7 @@ class MainActivity : FragmentActivity() {
             .add(R.id.main_frame, WalletFragment(), "wallet")
             .commitNow();
         lifecycleScope.launch {
+            // If necessary, you can add a timed refresh
             ExchangeRateManager.instance.loadExchangeRate(this@MainActivity);
             TokenDataManager.instance.loadTokenDetails(this@MainActivity);
         }

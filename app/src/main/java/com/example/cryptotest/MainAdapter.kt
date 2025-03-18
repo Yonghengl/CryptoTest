@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.cryptotest.model.Models
 
 class MainAdapter(
-    private val items: List<Models.WalletBalance>,
+    private var items: List<Models.WalletBalance>,
     private val context: Context,
     private val onItemClick: (Models.WalletBalance) -> Unit
 ) :
@@ -67,4 +67,8 @@ class MainAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun setItems(items: List<Models.WalletBalance>) {
+        this.items = items;
+    }
 }

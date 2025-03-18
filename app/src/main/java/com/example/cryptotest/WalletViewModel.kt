@@ -23,7 +23,7 @@ class WalletViewModel() : ViewModel() {
 
     private val _walletItems = MutableStateFlow<List<Models.WalletBalance>>(emptyList())
     val walletItems: StateFlow<List<Models.WalletBalance>> get() = _walletItems
-    private val _balance = MutableStateFlow<String>("0")
+    private val _balance = MutableStateFlow("0")
 
     val totalBalance: StateFlow<String> get() = _balance
 
@@ -52,5 +52,4 @@ class WalletViewModel() : ViewModel() {
         }
         _balance.value = total;
     }
-
 }

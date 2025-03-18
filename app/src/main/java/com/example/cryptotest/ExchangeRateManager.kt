@@ -24,6 +24,7 @@ class ExchangeRateManager {
     }
 
     private val _exchangeRate = MutableStateFlow<List<Models.CurrencyExchange>>(emptyList())
+    // can add room to cache exchangeRate
     val exchangeRate: StateFlow<List<Models.CurrencyExchange>> get() = _exchangeRate;
     suspend fun loadExchangeRate(context: Context) {
         FetchData(context).fetchExchangeRate().collect { items ->
