@@ -16,7 +16,7 @@ import java.io.InputStreamReader
 class FetchData(private val context: Context) {
     fun fetchWalletData(): Flow<WalletBalanceResponse> = flow {
         val jsonString = withContext(Dispatchers.IO) {
-            Thread.sleep(2000);
+//            Thread.sleep(2000);
             loadJSONFromAsset("wallet_balance.json")
         }
         val walletResponse: WalletBalanceResponse =
@@ -26,7 +26,7 @@ class FetchData(private val context: Context) {
 
     fun fetchExchangeRate(): Flow<LiveRatesResponse> = flow {
         val jsonString = withContext(Dispatchers.IO) {
-            Thread.sleep(4000);
+//            Thread.sleep(4000);
             loadJSONFromAsset("live_rates.json")
         }
         val liveRatesResponse: LiveRatesResponse =
@@ -36,7 +36,7 @@ class FetchData(private val context: Context) {
 
     fun fetchTokenDetails(): Flow<CurrenciesResponse> = flow {
         val jsonString = withContext(Dispatchers.IO) {
-            Thread.sleep(2000);
+//            Thread.sleep(2000);
             loadJSONFromAsset("currencies.json")
         }
         val liveRatesResponse: CurrenciesResponse =
