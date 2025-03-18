@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cryptotest.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
-const val TAG = "CroptyTest"
+const val TAG = "CryptoTest"
 
 class MainActivity : FragmentActivity() {
     private lateinit var mBinding: ActivityMainBinding
