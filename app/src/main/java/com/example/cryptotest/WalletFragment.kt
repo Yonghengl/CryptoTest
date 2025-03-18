@@ -12,11 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cryptotest.databinding.FragmentWalletBinding
 import com.example.cryptotest.model.Models
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
-class WalletFrragment : Fragment() {
+class WalletFragment : Fragment() {
     private lateinit var mBinding: FragmentWalletBinding
     private val walletViewModel: WalletViewModel = WalletViewModel()
 
